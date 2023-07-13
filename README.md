@@ -1,6 +1,6 @@
-# Alfresco PMD GitHub Action
+# Yet Another PMD Scan GitHub Action
 
-This repository contains the PMD GitHub Action and default configuration. Although primarily intended for Alfresco repositories, it is a generic Action and could be used by anybody.
+This repository contains the PMD GitHub Action and default configuration. Although primarily intended for Alfresco repositories, it is a generic Github Action and could be used by anybody.
 
 ## Action
 
