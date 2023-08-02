@@ -12,7 +12,7 @@ head_ref=$3
 generate_sarif=$4
 
 # Requires PMD to have already been downloaded to this location.
-run_pmd="/opt/hostedtoolcache/pmd/${PMD_VERSION}/x64/pmd-dist-${PMD_VERSION}-bin/bin/pmd"
+run_pmd="/opt/hostedtoolcache/pmd/${PMD_VERSION}/x64/pmd-bin-${PMD_VERSION}/bin/pmd"
 
 # Create a temporary directory for storing files.
 tmp_dir=$(mktemp -d)
