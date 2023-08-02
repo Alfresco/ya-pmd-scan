@@ -48,7 +48,7 @@ do
         new_file_count=$((new_file_count+1))
     fi
 done
-if [[ ${generate_sarif} == "true" ]]
+if [[ "${generate_sarif}" == "true" ]]
 then
     echo "Generating sarif.json for GitHub annotations."
     ${run_pmd} check --cache ${tmp_dir}/pmd.cache --file-list ${tmp_dir}/new-files.txt -R ${ruleset_location} --format=sarif -r ${tmp_dir}/sarif.json --no-fail-on-violation
@@ -63,15 +63,15 @@ diff ${tmp_dir}/old_report.txt ${tmp_dir}/new_report.txt || true
 # Store references to the files created.
 echo "OLD_ISSUE_COUNT=${old_issue_count}" >> "${GITHUB_ENV}"
 echo "NEW_ISSUE_COUNT=${new_issue_count}" >> "${GITHUB_ENV}"
-echo "OLD_REPORT_FILE=${tmp_dir}/old_report.txt" >> "$GITHUB_ENV"
-echo "NEW_REPORT_FILE=${tmp_dir}/new_report.txt" >> "$GITHUB_ENV"
-if [[ ${generate_sarif} == "true" ]]
+echo "OLD_REPORT_FILE=${tmp_dir}/old_report.txt" >> "${GITHUB_ENV}"
+echo "NEW_REPORT_FILE=${tmp_dir}/new_report.txt" >> "${GITHUB_ENV}"
+if [[ "${generate_sarif}" == "true" ]]
 then
-    echo "SARIF_REPORT_FILE=${tmp_dir}/sarif.json" >> "$GITHUB_ENV"
+    echo "SARIF_REPORT_FILE=${tmp_dir}/sarif.json" >> "${GITHUB_ENV}"
 fi
-echo "FULL_DIFF_FILE=${tmp_dir}/full-diff.txt" >> "$GITHUB_ENV"
-echo "HEAD_REF=$(git rev-parse ${head_ref})" >> "$GITHUB_ENV"
-echo "BASELINE_REF=${baseline_ref}" >> "$GITHUB_ENV"
+echo "FULL_DIFF_FILE=${tmp_dir}/full-diff.txt" >> "${GITHUB_ENV}"
+echo "HEAD_REF=$(git rev-parse ${head_ref})" >> "${GITHUB_ENV}"
+echo "BASELINE_REF=${baseline_ref}" >> "${GITHUB_ENV}"
 
 set +e
 echo "=========================== Finishing PMD Script =========================="

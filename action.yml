@@ -50,7 +50,12 @@ runs:
       shell: bash
 
     - name: Run PMD scan against changes
-      run: ${{ github.action_path }}/delta-scan.sh "pmd-ruleset/pmd-ruleset.xml" "origin/${{ github.base_ref }}" "origin/${{ github.head_ref }}" "${{ inputs.fail-on-new-issues }}" "${{ inputs.create-github-annotations }}"
+      run: |
+        ${{ github.action_path }}/delta-scan.sh \
+          "pmd-ruleset/pmd-ruleset.xml" \
+          "origin/${{ github.base_ref }}" \
+          "origin/${{ github.head_ref }}" \
+          "${{ inputs.create-github-annotations }}"
       if: ${{ github.event_name == 'pull_request' }}
       shell: bash
       env:
