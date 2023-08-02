@@ -4,7 +4,11 @@ inputs:
   pmd-version:
     description: The version of PMD to use
     required: false
-    default: "6.55.0"
+    default: "7.0.0-rc3"
+  pmd-sha256-digest:
+    description: The expected SHA-256 digest of the PMD zip file (64 digit hexidecimal value).
+    required: false
+    default: "e24b12c48582446a63b12d75a4e4ae4eb3c6e4b8f523ffa3226ccd33579c4229"
   create-github-annotations:
     description: |
       Whether to create inline comments on the PR using GH Advanced Security. This is free for open source projects but
@@ -38,12 +42,12 @@ runs:
         path: pmd-ruleset
 
     - name: Install PMD
-      uses: pmd/pmd-github-action@d57c0463ebba262a33d1983a5c6ac6031bfde43b # v1.4.1
-      id: pmd
-      with:
-        version: ${{ inputs.pmd-version }}
-        rulesets: pmd-ruleset/pmd-ruleset.xml
-        createGitHubAnnotations: ${{ inputs.create-github-annotations }}
+      run: |
+        wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F${{ inputs.pmd-version }}/pmd-dist-${{ inputs.pmd-version }}-bin.zip
+        echo "${{ inputs.pmd-sha256-digest }} pmd-dist-${{ inputs.pmd-version }}-bin.zip" | sha256sum --check
+        mkdir -p /opt/hostedtoolcache/pmd/${{ inputs.pmd-version }}/x64/
+        unzip pmd-dist-${{ inputs.pmd-version }}-bin.zip -d /opt/hostedtoolcache/pmd/${{ inputs.pmd-version }}/x64/
+      shell: bash
 
     - name: Run PMD scan against changes
       run: ${{ github.action_path }}/delta-scan.sh "pmd-ruleset/pmd-ruleset.xml" "origin/${{ github.base_ref }}" "origin/${{ github.head_ref }}" "${{ inputs.fail-on-new-issues }}"
@@ -53,7 +57,12 @@ runs:
         PMD_VERSION: ${{ inputs.pmd-version }}
 
     - name: Create a summary of PMD findings
-      run: python ${{ github.action_path }}/create-summary.py -o "${{ env.OLD_REPORT_FILE }}" -n "${{ env.NEW_REPORT_FILE }}" -d "${{ env.FULL_DIFF_FILE }}" -t $'PMD differences between ${{ env.BASELINE_REF }} and ${{ env.HEAD_REF }}\n\nNumber of PMD issues in edited files went from ${{ env.OLD_ISSUE_COUNT }} to ${{ env.NEW_ISSUE_COUNT }}'
+      run: |
+        python ${{ github.action_path }}/create-summary.py \
+          -o "${{ env.OLD_REPORT_FILE }}" \
+          -n "${{ env.NEW_REPORT_FILE }}" \
+          -d "${{ env.FULL_DIFF_FILE }}" \
+          -t $'PMD differences between ${{ env.BASELINE_REF }} and ${{ env.HEAD_REF }}\n\nNumber of PMD issues in edited files went from ${{ env.OLD_ISSUE_COUNT }} to ${{ env.NEW_ISSUE_COUNT }}'
       if: ${{ github.event_name == 'pull_request' }}
       shell: bash
 

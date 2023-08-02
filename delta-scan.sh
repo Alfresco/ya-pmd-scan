@@ -9,8 +9,8 @@ target_ref=$2
 # The git reference for the branch containing the PR changes.
 head_ref=$3
 
-# Requires pmd/pmd-github-action to have been executed already, as this will download PMD to this location.
-run_pmd="/opt/hostedtoolcache/pmd/${PMD_VERSION}/x64/pmd-bin-${PMD_VERSION}/bin/run.sh"
+# Requires PMD to have already been downloaded to this location.
+run_pmd="/opt/hostedtoolcache/pmd/${PMD_VERSION}/x64/pmd-dist-${PMD_VERSION}-bin/bin/pmd"
 
 # Create a temporary directory for storing files.
 tmp_dir=$(mktemp -d)
@@ -31,7 +31,7 @@ do
         old_file_count=$((old_file_count+1))
     fi
 done
-${run_pmd} pmd --cache ${tmp_dir}/pmd.cache --file-list ${tmp_dir}/old-files.txt -R ${ruleset_location} -r ${tmp_dir}/old_report.txt --fail-on-violation false
+${run_pmd} check --cache ${tmp_dir}/pmd.cache --file-list ${tmp_dir}/old-files.txt -R ${ruleset_location} -r ${tmp_dir}/old_report.txt --fail-on-violation false
 old_issue_count=$(cat ${tmp_dir}/old_report.txt | wc -l)
 echo "${old_issue_count} issue(s) found in ${old_file_count} old file(s) on ${baseline_ref}"
 
@@ -46,7 +46,7 @@ do
         new_file_count=$((new_file_count+1))
     fi
 done
-${run_pmd} pmd --cache ${tmp_dir}/pmd.cache --file-list ${tmp_dir}/new-files.txt -R ${ruleset_location} -r ${tmp_dir}/new_report.txt --fail-on-violation false
+${run_pmd} check --cache ${tmp_dir}/pmd.cache --file-list ${tmp_dir}/new-files.txt -R ${ruleset_location} -r ${tmp_dir}/new_report.txt --fail-on-violation false
 new_issue_count=$(cat ${tmp_dir}/new_report.txt | wc -l)
 echo "${new_issue_count} issue(s) found in ${new_file_count} updated file(s) on ${head_ref}"
 
