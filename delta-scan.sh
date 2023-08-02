@@ -8,6 +8,8 @@ ruleset_location=$1
 target_ref=$2
 # The git reference for the branch containing the PR changes.
 head_ref=$3
+# Whether to generate a sarif report for GitHub annotations.
+generate_sarif=$4
 
 # Requires PMD to have already been downloaded to this location.
 run_pmd="/opt/hostedtoolcache/pmd/${PMD_VERSION}/x64/pmd-dist-${PMD_VERSION}-bin/bin/pmd"
@@ -46,6 +48,11 @@ do
         new_file_count=$((new_file_count+1))
     fi
 done
+if [[ ${generate_sarif} == "true" ]]
+then
+    echo "Generating sarif.json for GitHub annotations."
+    ${run_pmd} check --cache ${tmp_dir}/pmd.cache --file-list ${tmp_dir}/new-files.txt -R ${ruleset_location} --format=sarif -r ${tmp_dir}/sarif.json --fail-on-violation false
+fi
 ${run_pmd} check --cache ${tmp_dir}/pmd.cache --file-list ${tmp_dir}/new-files.txt -R ${ruleset_location} -r ${tmp_dir}/new_report.txt --fail-on-violation false
 new_issue_count=$(cat ${tmp_dir}/new_report.txt | wc -l)
 echo "${new_issue_count} issue(s) found in ${new_file_count} updated file(s) on ${head_ref}"
@@ -58,6 +65,10 @@ echo "OLD_ISSUE_COUNT=${old_issue_count}" >> "${GITHUB_ENV}"
 echo "NEW_ISSUE_COUNT=${new_issue_count}" >> "${GITHUB_ENV}"
 echo "OLD_REPORT_FILE=${tmp_dir}/old_report.txt" >> "$GITHUB_ENV"
 echo "NEW_REPORT_FILE=${tmp_dir}/new_report.txt" >> "$GITHUB_ENV"
+if [[ ${generate_sarif} == "true" ]]
+then
+    echo "SARIF_REPORT_FILE=${tmp_dir}/sarif.json" >> "$GITHUB_ENV"
+fi
 echo "FULL_DIFF_FILE=${tmp_dir}/full-diff.txt" >> "$GITHUB_ENV"
 echo "HEAD_REF=$(git rev-parse ${head_ref})" >> "$GITHUB_ENV"
 echo "BASELINE_REF=${baseline_ref}" >> "$GITHUB_ENV"
