@@ -79,11 +79,10 @@ runs:
         path: ${{ env.PMD_SUMMARY_FILE }}
 
     - name: Archive PMD annotations file
-      uses: actions/upload-artifact@v3
+      uses: github/codeql-action/upload-sarif@v2
       if: ${{ github.event_name == 'pull_request' }} && "${{ inputs.create-github-annotations == 'true' }}"
       with:
-        name: PMD GitHub Annotations
-        path: ${{ env.SARIF_REPORT_FILE }}
+        sarif_file: ${{ env.SARIF_REPORT_FILE }}
 
     - name: Determine whether to fail the build due to violations.
       run: ${{ github.action_path }}/evaluate-status.sh "${{ env.OLD_ISSUE_COUNT }}" "${{ env.NEW_ISSUE_COUNT }}" "${{ inputs.fail-on-new-issues }}"
