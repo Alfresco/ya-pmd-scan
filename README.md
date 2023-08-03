@@ -27,4 +27,4 @@ steps:
 
 All parameters have default values and can be skipped.
 
-The PMD [SARIF](https://sarifweb.azurewebsites.net/) report is created as an artifact called `PMD Report` and a human readable summary of the report is created as an artifact called `PMD Summary (Human Readable)`.
+A human readable summary of the report is created as an artifact called `PMD Summary (Human Readable)`.

@@ -89,7 +89,7 @@ runs:
         name: PMD Summary (Human Readable)
         path: ${{ env.PMD_SUMMARY_FILE }}
 
-    - name: Archive PMD annotations file
+    - name: Create GitHub annotations
       uses: github/codeql-action/upload-sarif@v2
       if: ${{ github.event_name == 'pull_request' }} && "${{ inputs.create-github-annotations == 'true' }}"
       with:
