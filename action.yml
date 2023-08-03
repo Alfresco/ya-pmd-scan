@@ -20,11 +20,22 @@ inputs:
       When set to true this fails the build if the PR introduces more issues than it resolves.
     required: false
     default: "true"
+  pmd-ruleset-repo:
+    description: |
+      The GitHub repository containing the PMD ruleset.
+    required: false
+    default: "Alfresco/pmd-ruleset"
   pmd-ruleset-ref:
     description: |
       The git reference (e.g. branch name or commit id) for the Alfresco/pmd-ruleset project.
     required: false
     default: "master"
+  pmd-ruleset-path:
+    description: |
+      The path to the PMD ruleset file from the root of the ruleset project. Optionally other paths to local rulesets
+      can be appended to this separated by commas.
+    required: false
+    default: pmd-ruleset.xml
 
 runs:
   using: "composite"
@@ -37,7 +48,7 @@ runs:
     - name: Download ruleset
       uses: actions/checkout@v3
       with:
-        repository: AlfrescoLabs/pmd-ruleset
+        repository: ${{ inputs.pmd-ruleset-repo }}
         ref: ${{ inputs.pmd-ruleset-ref }}
         path: pmd-ruleset
 
@@ -52,7 +63,7 @@ runs:
     - name: Run PMD scan against changes
       run: |
         ${{ github.action_path }}/delta-scan.sh \
-          "pmd-ruleset/pmd-ruleset.xml" \
+          "pmd-ruleset/${{ inputs.pmd-ruleset-path }}" \
           "origin/${{ github.base_ref }}" \
           "origin/${{ github.head_ref }}" \
           "${{ inputs.create-github-annotations }}"
