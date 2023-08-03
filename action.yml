@@ -91,7 +91,7 @@ runs:
 
     - name: Create GitHub annotations
       uses: github/codeql-action/upload-sarif@v2
-      if: ${{ github.event_name == 'pull_request' }} && ${{ inputs.create-github-annotations == 'true' }}
+      if: ${{ github.event_name == 'pull_request' && inputs.create-github-annotations == 'true' }}
       with:
         sarif_file: ${{ env.SARIF_REPORT_FILE }}
 
