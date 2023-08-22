@@ -70,6 +70,9 @@ def summarise_report(filename):
     with open(filename) as report:
         for line in report.readlines():
             columns = line.strip().split(':\t')
+            if len(columns) != 3:
+                print(f'WARNING: Failed to extract violation from: {line}')
+                continue
             reference, rule, description = columns
             violation_count[rule] += 1
             details[rule].append((reference, description))
