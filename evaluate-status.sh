@@ -10,7 +10,7 @@ new_issue_count=$2
 fail_on_new_issues=$3
 
 # Fail the build if there are more issues now than before.
-if [[ ${new_issue_count} > ${old_issue_count} ]]
+if (( new_issue_count > old_issue_count ))
 then
     echo "ERROR: Number of PMD issues in edited files increased from ${old_issue_count} to ${new_issue_count}"
     if [[ ${fail_on_new_issues} == "true" ]]
