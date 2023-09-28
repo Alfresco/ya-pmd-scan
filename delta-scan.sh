@@ -25,6 +25,7 @@ git diff ${baseline_ref} ${head_ref} > ${tmp_dir}/full-diff.txt
 # Run PMD against the baseline commit.
 git checkout ${baseline_ref}
 old_file_count=0
+touch ${tmp_dir}/old-files.txt
 for file in $(cat ${tmp_dir}/file-list.txt)
 do
     if [[ -f ${file} ]]
@@ -40,6 +41,7 @@ echo "${old_issue_count} issue(s) found in ${old_file_count} old file(s) on ${ba
 # Rerun PMD against the PR head commit.
 git checkout ${head_ref}
 new_file_count=0
+touch ${tmp_dir}/new-files.txt
 for file in $(cat ${tmp_dir}/file-list.txt)
 do
     if [[ -f ${file} ]]
