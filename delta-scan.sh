@@ -20,6 +20,8 @@ tmp_dir=$(mktemp -d)
 # Create a list of the files changed by this PR.
 baseline_ref=$(git merge-base "${target_ref}" "${head_ref}")
 git diff --name-only ${baseline_ref} ${head_ref} > ${tmp_dir}/file-list.txt
+git diff --name-only ${head_ref} ${baseline_ref} >> ${tmp_dir}/file-list.txt
+sort -u ${tmp_dir}/file-list.txt -o ${tmp_dir}/file-list.txt
 git diff ${baseline_ref} ${head_ref} > ${tmp_dir}/full-diff.txt
 
 # Run PMD against the baseline commit.
