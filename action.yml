@@ -36,6 +36,22 @@ inputs:
       can be appended to this separated by commas.
     required: false
     default: pmd-ruleset.xml
+  classpath-enable:
+    description: |
+      Whether to set the classpath before the scan (used by certain rules - for example MissingOverride). This assumes
+      the project uses maven.
+    required: false
+    default: "true"
+  classpath-build-command:
+    description: Command to build the class files so that the classpath can be used.
+    required: false
+    default: mvn compile -DskipTests
+  classpath-directory-list:
+    description: |
+      A colon-separated list of directories containing class files. Using wildcards (*) or globstar (**) is
+      also supported in order to select items at one or many levels deep.
+    required: false
+    default: "**/target/classes"
 
 runs:
   using: "composite"
@@ -67,6 +83,9 @@ runs:
           "origin/${{ github.base_ref }}" \
           "origin/${{ github.head_ref }}" \
           "${{ inputs.create-github-annotations }}"
+          "${{ inputs.classpath-enable }}"
+          "${{ inputs.classpath-build-command }}"
+          "${{ inputs.classpath-directory-list }}"
       if: ${{ github.event_name == 'pull_request' }}
       shell: bash
       env:

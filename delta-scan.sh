@@ -10,12 +10,47 @@ target_ref=$2
 head_ref=$3
 # Whether to generate a sarif report for GitHub annotations.
 generate_sarif=$4
+# Whether to set the classpath before the scan.
+classpath_enable=$5
+# Command to build the class files so that the classpath can be used.
+classpath_build_command=$6
+# A colon-separated list of directories containing class files - may contain wildcards or globstar syntax (**).
+classpath_directory_list=$7
 
 # Requires PMD to have already been downloaded to this location.
 run_pmd="/opt/hostedtoolcache/pmd/${PMD_VERSION}/x64/pmd-bin-${PMD_VERSION}/bin/pmd"
 
 # Create a temporary directory for storing files.
 tmp_dir=$(mktemp -d)
+
+function set_classpath {
+    classpath_enable=$1
+    classpath_build_command=$2
+    classpath_directory_list=$3
+
+    if [[ ${classpath_enable} == "true" ]]
+    then
+        # Build the class files.
+        ${classpath_build_command}
+        # Set the classpath.
+        classpath=""
+        IFS=":"
+        shopt -s globstar
+        for file_glob in ${classpath_directory_list}
+        do
+            IFS=" "
+            for directory in ${file_glob}
+            do
+                classpath="${classpath}:${directory}"
+            done
+        done
+        # Reset the bash settings.
+        IFS=" "
+        shopt -u globstar
+        export CLASSPATH="${classpath:1}"
+        echo "CLASSPATH set to ${CLASSPATH}"
+    fi
+}
 
 # Create a list of the files changed by this PR.
 baseline_ref=$(git merge-base "${target_ref}" "${head_ref}")
@@ -36,6 +71,7 @@ do
         old_file_count=$((old_file_count+1))
     fi
 done
+set_classpath "${classpath_enable}" "${classpath_build_command}" "${classpath_directory_list}"
 ${run_pmd} check --cache ${tmp_dir}/pmd.cache --file-list ${tmp_dir}/old-files.txt -R ${ruleset_location} -r ${tmp_dir}/old_report.txt --no-fail-on-violation
 old_issue_count=$(cat ${tmp_dir}/old_report.txt | wc -l)
 echo "${old_issue_count} issue(s) found in ${old_file_count} old file(s) on ${baseline_ref}"
@@ -52,6 +88,7 @@ do
         new_file_count=$((new_file_count+1))
     fi
 done
+set_classpath "${classpath_enable}" "${classpath_build_command}" "${classpath_directory_list}"
 if [[ "${generate_sarif}" == "true" ]]
 then
     echo "Generating sarif.json for GitHub annotations."
