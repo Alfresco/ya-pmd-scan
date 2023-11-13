@@ -82,9 +82,9 @@ runs:
           "pmd-ruleset/${{ inputs.pmd-ruleset-path }}" \
           "origin/${{ github.base_ref }}" \
           "origin/${{ github.head_ref }}" \
-          "${{ inputs.create-github-annotations }}"
-          "${{ inputs.classpath-enable }}"
-          "${{ inputs.classpath-build-command }}"
+          "${{ inputs.create-github-annotations }}" \
+          "${{ inputs.classpath-enable }}" \
+          "${{ inputs.classpath-build-command }}" \
           "${{ inputs.classpath-directory-list }}"
       if: ${{ github.event_name == 'pull_request' }}
       shell: bash
