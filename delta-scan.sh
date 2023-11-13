@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 echo "=========================== Starting PMD Script ==========================="
-set -e
+set -ex
 
 # The location of the PMD ruleset.
 ruleset_location=$1
