@@ -23,6 +23,9 @@ steps:
       pmd-ruleset-repo: "Alfresco/pmd-ruleset" # The GitHub repository containing the PMD ruleset (by default https://github.com/Alfresco/pmd-ruleset/).
       pmd-ruleset-ref: "master" # The git reference (e.g. branch name, tag name or commit id) for the ruleset project.
       pmd-ruleset-path: "pmd-ruleset.xml" # The path to the PMD ruleset file from the root of the ruleset project. Optionally other paths to local rulesets can be appended to this separated by commas.
+      classpath-enable: "true" # Whether to set the classpath before the scan (used by certain rules - for example MissingOverride). This assumes the project uses maven.
+      classpath-build-command: "mvn -ntp test-compile" # Command to build the class files so that the classpath can be used.
+      classpath-directory-list: "**/target/classes" # A colon-separated list of directories containing class files. Using wildcards (*) or globstar (**) is also supported in order to select items at one or many levels deep.
 ```
 
 All parameters have default values and can be skipped.
