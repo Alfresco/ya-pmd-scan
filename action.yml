@@ -45,7 +45,7 @@ inputs:
   classpath-build-command:
     description: Command to build the class files so that the classpath can be used.
     required: false
-    default: mvn test-compile
+    default: mvn -ntp test-compile
   classpath-directory-list:
     description: |
       A colon-separated list of directories containing class files. Using wildcards (*) or globstar (**) is

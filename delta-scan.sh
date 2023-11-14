@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 echo "=========================== Starting PMD Script ==========================="
-set -ex
+set -e
 
 # The location of the PMD ruleset.
 ruleset_location=$1
@@ -34,18 +34,19 @@ function set_classpath {
         ${classpath_build_command}
         # Set the classpath.
         classpath=""
+        old_ifs=$IFS
         IFS=":"
         shopt -s globstar
         for file_glob in ${classpath_directory_list}
         do
-            IFS=" "
+            IFS=${old_ifs}
             for directory in ${file_glob}
             do
                 classpath="${classpath}:${directory}"
             done
         done
         # Reset the bash settings.
-        IFS=" "
+        IFS=${old_ifs}
         shopt -u globstar
         export CLASSPATH="${classpath:1}"
         echo "CLASSPATH set to ${CLASSPATH}"
