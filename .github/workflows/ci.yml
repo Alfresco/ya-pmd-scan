@@ -18,20 +18,22 @@ jobs:
   pre_commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.35.2
+      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v5.33.0
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - id: changed-files
-        uses: tj-actions/changed-files@7fc073d92265804a8d4e4982b637dee053daf6c5 # v42.0.7
-      - name: Store changed files in env
-        run: echo "GITHUB_MODIFIED_FILES=${{ steps.changed-files.outputs.all_changed_files }}" >> $GITHUB_ENV
-      - uses: Alfresco/alfresco-build-tools/.github/actions/pre-commit@v1.35.2
+        uses: Alfresco/alfresco-build-tools/.github/actions/github-list-changes@v5.33.0
+        with:
+          write-list-to-env: true
+      - uses: Alfresco/alfresco-build-tools/.github/actions/pre-commit@v5.33.0
 
   test_scan:
     name: "Run test scan against this repository."
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.
         with:
           create-github-annotations: "false"
