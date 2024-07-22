@@ -57,12 +57,12 @@ runs:
   using: "composite"
   steps:
     - name: Clone the full history
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     - name: Download ruleset
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: ${{ inputs.pmd-ruleset-repo }}
         ref: ${{ inputs.pmd-ruleset-ref }}
@@ -70,10 +70,10 @@ runs:
 
     - name: Install PMD
       run: |
-        wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F${{ inputs.pmd-version }}/pmd-dist-${{ inputs.pmd-version }}-bin.zip
+        wget --no-verbose https://github.com/pmd/pmd/releases/download/pmd_releases%2F${{ inputs.pmd-version }}/pmd-dist-${{ inputs.pmd-version }}-bin.zip
         echo "${{ inputs.pmd-sha256-digest }} pmd-dist-${{ inputs.pmd-version }}-bin.zip" | sha256sum --check
         mkdir -p /opt/hostedtoolcache/pmd/${{ inputs.pmd-version }}/x64/
-        unzip pmd-dist-${{ inputs.pmd-version }}-bin.zip -d /opt/hostedtoolcache/pmd/${{ inputs.pmd-version }}/x64/
+        unzip -q pmd-dist-${{ inputs.pmd-version }}-bin.zip -d /opt/hostedtoolcache/pmd/${{ inputs.pmd-version }}/x64/
       shell: bash
 
     - name: Run PMD scan against changes
@@ -102,14 +102,14 @@ runs:
       shell: bash
 
     - name: Archive PMD summary
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: ${{ github.event_name == 'pull_request' }}
       with:
         name: PMD Summary (Human Readable)
         path: ${{ env.PMD_SUMMARY_FILE }}
 
     - name: Create GitHub annotations
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v3
       if: ${{ github.event_name == 'pull_request' && inputs.create-github-annotations == 'true' }}
       with:
         sarif_file: ${{ env.SARIF_REPORT_FILE }}
