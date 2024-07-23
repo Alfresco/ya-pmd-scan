@@ -25,11 +25,13 @@ inputs:
       The GitHub repository containing the PMD ruleset.
     required: false
     default: "Alfresco/pmd-ruleset"
-  pmd-ruleset-ref:
+  pmd-ruleset-ref-override:
     description: |
-      The git reference (e.g. branch name or commit id) for the Alfresco/pmd-ruleset project.
+      A git reference (e.g. branch name, tag name or commit id) for the ruleset project. If this is not provided then the
+      default is the latest tag alphabetically with the name starting with the PMD version (for example this could be a
+      tag 7.1.0_20240723 if pmd-version is set to 7.1.0) and falling back to the default commit checked out by a clone.
     required: false
-    default: "master"
+    default: ""
   pmd-ruleset-path:
     description: |
       The path to the PMD ruleset file from the root of the ruleset project. Optionally other paths to local rulesets
@@ -65,8 +67,27 @@ runs:
       uses: actions/checkout@v4
       with:
         repository: ${{ inputs.pmd-ruleset-repo }}
-        ref: ${{ inputs.pmd-ruleset-ref }}
         path: pmd-ruleset
+        fetch-depth: 0
+
+    - name: Determine ruleset ref to checkout
+      id: find-ruleset-ref
+      run: |
+        cd pmd-ruleset;
+        if [[ -z "${{ inputs.pmd-ruleset-ref-override }}" ]]; then
+          echo "No ruleset ref override provided, finding latest tag starting with PMD version: ${{ inputs.pmd-version }}";
+          ruleset_ref="$(git tag --list --sort=-taggerdate "${{ inputs.pmd-version }}*" | head -1)";
+        else
+          echo "Using ruleset ref override: ${{ inputs.pmd-ruleset-ref-override }}";
+          ruleset_ref=${{ inputs.pmd-ruleset-ref-override }};
+        fi
+        if [[ -z "$ruleset_ref" ]]; then
+          echo "No ruleset ref found, falling back to HEAD.";
+          ruleset_ref=HEAD;
+        fi
+        echo "Checking out ruleset ref: ${ruleset_ref}";
+        git checkout $ruleset_ref;
+      shell: bash
 
     - name: Install PMD
       run: |

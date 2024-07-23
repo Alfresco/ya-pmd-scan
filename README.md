@@ -21,7 +21,7 @@ steps:
       create-github-annotations: "true" # Whether to create annotations using the GitHub Advanced Security (nb. this is not free for private repositories)
       fail-on-new-issues: "true" # Whether the introduction of new issues should cause the build to fail.
       pmd-ruleset-repo: "Alfresco/pmd-ruleset" # The GitHub repository containing the PMD ruleset (by default https://github.com/Alfresco/pmd-ruleset/).
-      pmd-ruleset-ref: "master" # The git reference (e.g. branch name, tag name or commit id) for the ruleset project.
+      pmd-ruleset-ref-override: "" # A git reference (e.g. branch name, tag name or commit id) for the ruleset project. If this is not provided then the default is the latest tag alphabetically with the name starting with the PMD version (for example this could be a tag 7.1.0_20240723 if pmd-version is set to 7.1.0) and falling back to the default commit checked out by a clone.
       pmd-ruleset-path: "pmd-ruleset.xml" # The path to the PMD ruleset file from the root of the ruleset project. Optionally other paths to local rulesets can be appended to this separated by commas.
       classpath-enable: "true" # Whether to set the classpath before the scan (used by certain rules - for example MissingOverride). This assumes the project uses maven.
       classpath-build-command: "mvn -ntp test-compile" # Command to build the class files so that the classpath can be used.
