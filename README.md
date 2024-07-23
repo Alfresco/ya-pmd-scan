@@ -16,8 +16,8 @@ if: >
 steps:
   - uses: Alfresco/alfresco-build-tools/.github/actions/pmd@ref
     with:
-      pmd-version: "7.1.0" # The version of PMD to use (only 7.x versions are supported).
-      pmd-sha256-digest: "0d31d257450f85d995cc87099f5866a7334f26d6599dacab285f2d761c049354" # The expected SHA-256 digest of the PMD distribution binaries zip file (64 digit hexidecimal value).
+      pmd-version: "7.3.0" # The version of PMD to use (only 7.x versions are supported).
+      pmd-sha256-digest: "7e56043b5db83b288804c97d48a46db37bba22861b63eadd8e69f72c74bfb0a8" # The expected SHA-256 digest of the PMD distribution binaries zip file (64 digit hexidecimal value).
       create-github-annotations: "true" # Whether to create annotations using the GitHub Advanced Security (nb. this is not free for private repositories)
       fail-on-new-issues: "true" # Whether the introduction of new issues should cause the build to fail.
       pmd-ruleset-repo: "Alfresco/pmd-ruleset" # The GitHub repository containing the PMD ruleset (by default https://github.com/Alfresco/pmd-ruleset/).
