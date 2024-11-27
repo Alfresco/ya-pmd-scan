@@ -4,11 +4,11 @@ inputs:
   pmd-version:
     description: The version of PMD to use
     required: false
-    default: "7.5.0"
+    default: "7.7.0"
   pmd-sha256-digest:
     description: The expected SHA-256 digest of the PMD zip file (64 digit hexidecimal value).
     required: false
-    default: "d188d592409033712bf7b99dc739ca6c238f296c6dbe6bc5f95e9403684c8ee1"
+    default: "be8bf68f6c1d66984bd9645a93e631b78a1c2f42f5f0f8719082fead67553940"
   create-github-annotations:
     description: |
       Whether to create inline comments on the PR using GH Advanced Security. This is free for open source projects but
