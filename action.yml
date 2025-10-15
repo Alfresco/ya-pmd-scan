@@ -8,7 +8,7 @@ inputs:
   pmd-sha256-digest:
     description: The expected SHA-256 digest of the PMD zip file (64 digit hexidecimal value).
     required: false
-    default: "cd676b19dbe87e86f7eed5940a484be2d3ab6a2d1d552e605860ab12fbf05cbb" # pragma: allowlist secret
+    default: "670e342db65437abcbaf1ce114b2e3b3285de64c2dcc590ca0e4f1a15ab22a6b" # pragma: allowlist secret
   create-github-annotations:
     description: |
       Whether to create inline comments on the PR using GH Advanced Security. This is free for open source projects but
