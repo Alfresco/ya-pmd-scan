@@ -18,15 +18,15 @@ jobs:
   pre_commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v8.19.1
+      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v9.3.2
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - id: changed-files
-        uses: Alfresco/alfresco-build-tools/.github/actions/github-list-changes@v8.19.1
+        uses: Alfresco/alfresco-build-tools/.github/actions/github-list-changes@v9.3.2
         with:
           write-list-to-env: true
-      - uses: Alfresco/alfresco-build-tools/.github/actions/pre-commit@v8.19.1
+      - uses: Alfresco/alfresco-build-tools/.github/actions/pre-commit@v9.3.2
 
   test_scan:
     name: "Run test scan against this repository."
