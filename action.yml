@@ -59,12 +59,12 @@ runs:
   using: "composite"
   steps:
     - name: Clone the full history
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         fetch-depth: 0
 
     - name: Download ruleset
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: ${{ inputs.pmd-ruleset-repo }}
         path: pmd-ruleset
